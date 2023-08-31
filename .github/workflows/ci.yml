@@ -24,17 +24,17 @@ jobs:
       - name: Install Graphviz
         run: sudo apt-get update && sudo apt-get install -y graphviz
 
-      - name: Check 'blah.txt' for Changes.
-        id: check_for_diff
-        run: |
-          curl -o main-blah.txt 'https://raw.githubusercontent.com/rj00a/test/main/blah.txt' && \
-          cmp main-blah.txt blah.txt
+      - name: Generate new depgraph
+        run: cargo depgraph --workspace-only | tred | dot -Tsvg -o depgraph.svg
+
+      - name: Check depgraph for changes
+        run: git diff --exit-code depgraph.svg
 
       - name: Leave Comment
         uses: thollander/actions-comment-pull-request@v2
         if: steps.check_for_diff.conclusion == 'failure'
         with:
           message: |
-            Blah.txt changed!
+            Depgraph changed!
           comment_tag: depgraph
           mode: recreate
