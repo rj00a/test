@@ -43,11 +43,13 @@ jobs:
             
           \`\`\`html
           $(cat depgraph.svg)
+
           \`\`\`
           </details>
           
+          For reference, here is a diff against the old depgraph.svg:
+
           <details>
-            <summary>Diff against previous</summary>
 
           \`\`\`patch
           $(cat depgraph.patch)
