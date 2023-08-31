@@ -36,11 +36,13 @@ jobs:
         if: ${{ failure() }}
         run: |
           echo "Looks like the workspace dependency graph was changed.
-          Please place the following text in `assets/depgraph.svg`
+          Please place the following text in \`assets/depgraph.svg\`
           
           <details>
             <summary>depgraph.svg</summary>
+          ```html
           $(cat depgraph.svg)
+          ```
           </details>" >> pr-comment.txt
 
       - name: Leave Comment
