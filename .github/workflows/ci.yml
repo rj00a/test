@@ -18,15 +18,23 @@ jobs:
       - name: Checkout Actions Repository
         uses: actions/checkout@v3
 
-      - name: Install Dependencies
-        run: |
-          cargo install cargo-depgraph
-          sudo apt-get update && sudo apt-get install -y graphviz
+      - name: Install cargo-depgraph
+        run: cargo install cargo-depgraph
 
-      - name: Hello world
+      - name: Install Graphviz
+        run: sudo apt-get update && sudo apt-get install -y graphviz
+
+      - name: Check 'blah.txt' for Changes.
+        id: check_for_diff
+        run: |
+          curl -o main-blah.txt 'https://raw.githubusercontent.com/rj00a/test/main/blah.txt' && \
+          cmp main-blah.txt blah.txt
+
+      - name: Leave Comment
         uses: thollander/actions-comment-pull-request@v2
+        if: steps.check_for_diff.conclusion == 'failure'
         with:
           message: |
-            Hello, World!
+            Blah.txt changed!
           comment_tag: depgraph
           mode: recreate
