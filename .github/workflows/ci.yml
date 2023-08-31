@@ -33,7 +33,7 @@ jobs:
 
       - name: Leave Comment
         uses: thollander/actions-comment-pull-request@v2
-        if: steps.check_diff.outcome == 'failure'
+        if: ${{ failure() }}
         with:
           message: |
             Depgraph changed!
