@@ -28,3 +28,5 @@ jobs:
         with:
           message: |
             Hello World!
+          comment_tag: depgraph
+          mode: recreate
