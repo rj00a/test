@@ -30,14 +30,23 @@ jobs:
         run: cargo depgraph --workspace-only | tred | dot -Tsvg -o depgraph.svg
 
       - name: Check depgraph for changes
-        id: check_diff
         run: git diff --exit-code depgraph.svg
 
-      - name: Leave Comment
-        uses: thollander/actions-comment-pull-request@v2
+      - name: Create comment file
         if: ${{ failure() }}
+        run: |
+          echo "Looks like the workspace dependency graph was changed.
+          Please place the following text in `assets/depgraph.svg`
+          
+          <details>
+            <summary>depgraph.svg</summary>
+          $(cat depgraph.svg)
+          </details>" >> pr-comment.txt
+
+      - name: Leave Comment
+        if: ${{ failure() }}
+        uses: thollander/actions-comment-pull-request@v2
         with:
-          message: |
-            Depgraph changed!
+          filePath: pr-comment.txt
           comment_tag: depgraph
           mode: recreate
