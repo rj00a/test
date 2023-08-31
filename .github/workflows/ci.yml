@@ -23,20 +23,20 @@ jobs:
         with:
           crate: cargo-depgraph
 
-      - name: Install Graphviz
+      - name: Install graphviz
         run: sudo apt update && sudo apt install -y graphviz
 
       - name: Generate new depgraph
         run: cargo depgraph --workspace-only | tred | dot -Tsvg -o depgraph.svg
 
-      - name: Check depgraph for changes
-        run: git diff --exit-code depgraph.svg
+      - name: Check depgraph diff
+        run: git diff --exit-code depgraph.svg > depgraph.diff
 
       - name: Create comment file
         if: ${{ failure() }}
         run: |
-          echo "Looks like the workspace dependency graph was changed. \
-          Please place the following text in \`assets/depgraph.svg\`
+          echo "It looks like this pull request changed the workspace dependency graph. \
+          Please replace \`assets/depgraph.svg\` with the following text:
           
           <details>
             <summary>depgraph.svg</summary>
@@ -44,9 +44,17 @@ jobs:
             \`\`\`html
             $(cat depgraph.svg)
             \`\`\`
+          </details>
+          
+          <details>
+            <summary>Diff against previous</summary>
+
+            \`\`\`diff
+            $(depgraph.diff)
+            \`\`\`
           </details>" >> pr-comment.txt
 
-      - name: Leave Comment
+      - name: Leave comment
         if: ${{ failure() }}
         uses: thollander/actions-comment-pull-request@v2
         with:
