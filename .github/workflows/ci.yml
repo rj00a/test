@@ -40,9 +40,10 @@ jobs:
           
           <details>
             <summary>depgraph.svg</summary>
-          \`\`\`html
-          $(cat depgraph.svg)
-          \`\`\`
+            
+            \`\`\`html
+            $(cat depgraph.svg)
+            \`\`\`
           </details>" >> pr-comment.txt
 
       - name: Leave Comment
