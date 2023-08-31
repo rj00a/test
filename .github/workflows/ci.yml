@@ -54,10 +54,17 @@ jobs:
             \`\`\`
           </details>" >> pr-comment.txt
 
-      - name: Leave comment
+      # - name: Leave comment
+      #   if: ${{ failure() }}
+      #   uses: thollander/actions-comment-pull-request@v2
+      #   with:
+      #     filePath: pr-comment.txt
+      #     comment_tag: depgraph
+      #     mode: recreate
+
+      - uses: marocchino/sticky-pull-request-comment@v2
         if: ${{ failure() }}
-        uses: thollander/actions-comment-pull-request@v2
         with:
-          filePath: pr-comment.txt
-          comment_tag: depgraph
-          mode: recreate
+          recreate: true
+          header: depgraph
+          path: pr-comment.txt
