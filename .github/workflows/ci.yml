@@ -35,7 +35,7 @@ jobs:
       - name: Create comment file
         if: ${{ failure() }}
         run: |
-          echo "It looks like this pull request changed the workspace dependency graph. \
+          echo "It looks like this pull request changed the workspace structure. \
           Please replace \`assets/depgraph.svg\` with the following text:
           
           <details>
