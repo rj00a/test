@@ -35,14 +35,14 @@ jobs:
       - name: Create comment file
         if: ${{ failure() }}
         run: |
-          echo "Looks like the workspace dependency graph was changed.
+          echo "Looks like the workspace dependency graph was changed. \
           Please place the following text in \`assets/depgraph.svg\`
           
           <details>
             <summary>depgraph.svg</summary>
-          ```html
+          \`\`\`html
           $(cat depgraph.svg)
-          ```
+          \`\`\`
           </details>" >> pr-comment.txt
 
       - name: Leave Comment
