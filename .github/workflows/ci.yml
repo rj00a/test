@@ -39,7 +39,7 @@ jobs:
           Please replace \`assets/depgraph.svg\` with the following text:
           
           <details>
-            <summary>depgraph.svg</summary>
+            <summary>\`depgraph.svg\` (Don't forget the trailing newline)</summary>
             
           \`\`\`html
           $(cat depgraph.svg)
@@ -47,7 +47,7 @@ jobs:
           \`\`\`
           </details>
           
-          For reference, here is a diff against the old depgraph.svg:
+          For reference, here is a diff against the old \`depgraph.svg\`:
 
           <details>
 
@@ -55,14 +55,6 @@ jobs:
           $(cat depgraph.patch)
           \`\`\`
           </details>" >> pr-comment.txt
-
-      # - name: Leave comment
-      #   if: ${{ failure() }}
-      #   uses: thollander/actions-comment-pull-request@v2
-      #   with:
-      #     filePath: pr-comment.txt
-      #     comment_tag: depgraph
-      #     mode: recreate
 
       - uses: marocchino/sticky-pull-request-comment@v2
         if: ${{ failure() }}
