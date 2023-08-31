@@ -41,16 +41,14 @@ jobs:
           <details>
             <summary>depgraph.svg</summary>
             
-            \`\`\`html" >> pr-comment.txt
-          cat depgraph.svg >> pr-comment.txt
-          echo "  \`\`\`
+            <pre>$(cat depgraph.svg)</pre>
           </details>
           
           <details>
             <summary>Diff against previous</summary>
 
-            \`\`\`patch" >> pr-comment.txt
-          echo "  $(cat depgraph.patch)
+            \`\`\`patch
+            $(cat depgraph.patch)
             \`\`\`
           </details>" >> pr-comment.txt
 
