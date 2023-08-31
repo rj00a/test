@@ -41,9 +41,7 @@ jobs:
           <details>
             <summary>depgraph.svg</summary>
             
-            \`\`\`html
-            $(cat depgraph.svg)
-            \`\`\`
+            <pre>$(cat depgraph.svg)</pre>
           </details>
           
           <details>
