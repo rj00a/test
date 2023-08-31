@@ -24,7 +24,7 @@ jobs:
           sudo apt-get update && sudo apt-get install -y graphviz
 
       - name: Hello world
-      - uses: thollander/actions-comment-pull-request@v2
+        uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
             Hello World!
