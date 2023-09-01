@@ -3,6 +3,8 @@ name: CI
 on:
   pull_request:
     branches: [ "main" ]
+  push:
+    branches: [ "main" ]
 
 env:
   CARGO_TERM_COLOR: always
@@ -27,44 +29,41 @@ jobs:
         run: sudo apt update && sudo apt install -y graphviz
 
       - name: Generate new depgraph
-        run: cargo depgraph --workspace-only | tred | dot -Tsvg -o depgraph.svg
+        run: cargo depgraph --workspace-only | tred | dot -Tsvg -o assets/depgraph.svg
 
       - name: Check depgraph diff
-        run: git diff --exit-code depgraph.svg > depgraph.patch
+        run: git diff --exit-code assets/depgraph.svg > assets/depgraph.patch
 
-      - name: Create comment file
-        if: ${{ failure() }}
+      - name: Create comment artifact
+        if: ${{ failure() && github.event_name == 'pull_request' }}
         run: |
-          echo "It looks like this pull request changed the workspace dependency graph. \
+          mkdir ./bad-depgraph
+          echo ${{ github.event.number }} >> ./bad-depgraph/event-number
+
+          echo "It looks like this pull request changed the workspace structure. \
           Please replace \`assets/depgraph.svg\` with the following text:
-          
+
           <details>
-            <summary>depgraph.svg</summary>
+            <summary>depgraph.svg (Don't forget the trailing newline)</summary>
             
           \`\`\`html
-          $(cat depgraph.svg)
+          $(cat assets/depgraph.svg)
+
           \`\`\`
           </details>
-          
+
+          For reference, here is a diff against the old \`depgraph.svg\`:
+
           <details>
-            <summary>Diff against previous</summary>
 
           \`\`\`patch
-          $(cat depgraph.patch)
+          $(cat assets/depgraph.patch)
           \`\`\`
-          </details>" >> pr-comment.txt
+          </details>" > ./bad-depgraph/pr-comment.txt
 
-      # - name: Leave comment
-      #   if: ${{ failure() }}
-      #   uses: thollander/actions-comment-pull-request@v2
-      #   with:
-      #     filePath: pr-comment.txt
-      #     comment_tag: depgraph
-      #     mode: recreate
-
-      - uses: marocchino/sticky-pull-request-comment@v2
-        if: ${{ failure() }}
+      - name: Upload comment artifact
+        uses: actions/upload-artifact@v2
+        if: ${{ failure() && github.event_name == 'pull_request' }}
         with:
-          recreate: true
-          header: depgraph
-          path: pr-comment.txt
+          name: bad-depgraph
+          path: bad-depgraph/
